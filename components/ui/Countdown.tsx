@@ -41,42 +41,78 @@ function Digit({ value, label }: { value: number; label: string }) {
   );
 }
 
-export function Countdown({ target }: { target: string }) {
+export interface Fixture {
+  date: string;
+  homeName: string;
+  homeFlag: string;
+  awayName: string;
+  awayFlag: string;
+  venue: string;
+  city: string;
+}
+
+function formatKickoff(date: string): string {
+  const formatted = new Date(date).toLocaleString("es-AR", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  return formatted.charAt(0).toUpperCase() + formatted.slice(1);
+}
+
+export function Countdown({ fixtures }: { fixtures: Fixture[] }) {
   const now = useNowSeconds();
 
   if (now === null) {
-    return <div className="h-28 sm:h-32" aria-hidden />;
+    return <div className="h-40 sm:h-44" aria-hidden />;
   }
 
-  const total = Math.max(0, differenceInSeconds(new Date(target), new Date(now * 1000)));
+  const nowMs = now * 1000;
+  const next = fixtures.find((f) => new Date(f.date).getTime() > nowMs) ?? null;
 
-  if (total === 0) {
+  if (!next) {
     return (
       <motion.p
         initial={{ scale: 0.8, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         className="text-2xl font-semibold text-cor-green"
       >
-        ¡El Mundial ya comenzó! ⚽
+        ¡El Mundial está en marcha! ⚽
       </motion.p>
     );
   }
 
+  const total = Math.max(0, differenceInSeconds(new Date(next.date), new Date(nowMs)));
   const days = Math.floor(total / 86400);
   const hours = Math.floor((total % 86400) / 3600);
   const minutes = Math.floor((total % 3600) / 60);
   const seconds = total % 60;
 
   return (
-    <div
-      className="flex items-start gap-3 sm:gap-4"
-      role="timer"
-      aria-label="Cuenta regresiva al Mundial 2026"
-    >
-      <Digit value={days} label="Días" />
-      <Digit value={hours} label="Horas" />
-      <Digit value={minutes} label="Min" />
-      <Digit value={seconds} label="Seg" />
+    <div className="flex flex-col items-center gap-5">
+      <p className="text-xs uppercase tracking-[0.2em] text-cor-yellow/80">
+        Próximo partido
+      </p>
+      <div
+        className="flex items-start gap-3 sm:gap-4"
+        role="timer"
+        aria-label="Cuenta regresiva al próximo partido del Mundial 2026"
+      >
+        <Digit value={days} label="Días" />
+        <Digit value={hours} label="Horas" />
+        <Digit value={minutes} label="Min" />
+        <Digit value={seconds} label="Seg" />
+      </div>
+      <div className="space-y-1 text-center">
+        <p className="text-base font-semibold text-white sm:text-lg">
+          {next.homeFlag} {next.homeName} vs {next.awayName} {next.awayFlag}
+        </p>
+        <p className="text-sm text-white/50">
+          {formatKickoff(next.date)} · {next.venue}, {next.city}
+        </p>
+      </div>
     </div>
   );
 }

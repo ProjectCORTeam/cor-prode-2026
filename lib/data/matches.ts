@@ -12,8 +12,8 @@ export interface Match {
 
 export const MATCHES: Match[] = [
   // ── Grupo A ──
-  { id: "a1", phase: "group", group: "A", homeTeamId: "mex", awayTeamId: "rsa", date: "2026-06-11T20:00:00-06:00", venue: "Estadio Azteca", city: "Ciudad de México" },
-  { id: "a2", phase: "group", group: "A", homeTeamId: "kor", awayTeamId: "cze", date: "2026-06-11T17:00:00-06:00", venue: "Estadio Akron", city: "Guadalajara" },
+  { id: "a1", phase: "group", group: "A", homeTeamId: "mex", awayTeamId: "rsa", date: "2026-06-11T13:00:00-06:00", venue: "Estadio Azteca", city: "Ciudad de México" },
+  { id: "a2", phase: "group", group: "A", homeTeamId: "kor", awayTeamId: "cze", date: "2026-06-11T20:00:00-06:00", venue: "Estadio Akron", city: "Guadalajara" },
   { id: "a3", phase: "group", group: "A", homeTeamId: "mex", awayTeamId: "kor", date: "2026-06-18T19:00:00-06:00", venue: "Estadio Akron", city: "Guadalajara" },
   // ── Grupo B ──
   { id: "b1", phase: "group", group: "B", homeTeamId: "can", awayTeamId: "qat", date: "2026-06-12T15:00:00-04:00", venue: "BMO Field", city: "Toronto" },
@@ -65,7 +65,16 @@ export const getMatchesByGroup = (g: string) => MATCHES.filter((m) => m.group ==
 
 export const TOTAL_GROUP_MATCHES = MATCHES.length;
 
-/** Inicio del torneo: México vs Sudáfrica, Estadio Azteca */
-export const TOURNAMENT_START = "2026-06-11T20:00:00-06:00";
+/** Partidos ordenados cronológicamente por fecha de inicio (ascendente). */
+export const MATCHES_BY_DATE = [...MATCHES].sort(
+  (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
+);
+
+/** Primer partido cuyo kickoff todavía no ocurrió respecto a `now`. */
+export const getNextMatch = (now: Date = new Date()): Match | null =>
+  MATCHES_BY_DATE.find((m) => new Date(m.date).getTime() > now.getTime()) ?? null;
+
+/** Inicio del torneo: México vs Sudáfrica, Estadio Azteca (13:00 hora de Ciudad de México, CDT) */
+export const TOURNAMENT_START = "2026-06-11T13:00:00-06:00";
 /** Final: MetLife Stadium, Nueva Jersey */
 export const TOURNAMENT_FINAL = "2026-07-19T15:00:00-04:00";
