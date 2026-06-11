@@ -1,8 +1,23 @@
 import Image from "next/image";
 import Link from "next/link";
 import { WorldGlobe } from "@/components/globe/WorldGlobeLazy";
-import { Countdown } from "@/components/ui/Countdown";
-import { TOURNAMENT_START } from "@/lib/data/matches";
+import { Countdown, type Fixture } from "@/components/ui/Countdown";
+import { MATCHES_BY_DATE } from "@/lib/data/matches";
+import { getTeamById } from "@/lib/data/teams";
+
+const FIXTURES: Fixture[] = MATCHES_BY_DATE.map((match) => {
+  const home = getTeamById(match.homeTeamId);
+  const away = getTeamById(match.awayTeamId);
+  return {
+    date: match.date,
+    homeName: home?.name ?? match.homeTeamId,
+    homeFlag: home?.flag ?? "",
+    awayName: away?.name ?? match.awayTeamId,
+    awayFlag: away?.flag ?? "",
+    venue: match.venue,
+    city: match.city,
+  };
+});
 
 export default function HomePage() {
   return (
@@ -41,10 +56,7 @@ export default function HomePage() {
           </p>
         </div>
 
-        <Countdown target={TOURNAMENT_START} />
-        <p className="-mt-6 text-sm text-white/50">
-          México 🇲🇽 vs Sudáfrica 🇿🇦 — Estadio Azteca, 11 de junio
-        </p>
+        <Countdown fixtures={FIXTURES} />
 
         <div className="pointer-events-auto flex flex-col gap-3 sm:flex-row">
           <Link
