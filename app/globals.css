@@ -1,0 +1,46 @@
+@import "tailwindcss";
+
+/*
+ * COR — Visual Identity System (Nov 2025)
+ * Base: negro + blanco · Acento de firma: amarillo
+ * Secundaria fría (uso moderado): aqua, blue, green, navy
+ */
+@theme {
+  /* Neutra (base) */
+  --color-cor-black: #20201f;
+  --color-cor-black-pure: #000000;
+  --color-cor-white: #ffffff;
+  --color-cor-yellow: #fbde3f;
+
+  /* Secundaria (fría) */
+  --color-cor-aqua-light: #8fd3eb;
+  --color-cor-aqua: #48bcd0;
+  --color-cor-blue: #2f7ec9;
+  --color-cor-green: #03cc7a;
+  --color-cor-navy: #1a2442;
+
+  /* Terciaria (púrpuras) */
+  --color-cor-lavender-light: #e8d8e8;
+  --color-cor-purple: #9570af;
+  --color-cor-plum: #4d3569;
+  --color-cor-plum-dark: #281b37;
+
+  --font-sans: var(--font-poppins);
+}
+
+:root {
+  /* Gradientes oficiales: solo 90°/180°, claro → oscuro de izquierda a derecha */
+  --cor-gradient-cool: linear-gradient(90deg, #48bcd0 0%, #2f7ec9 100%);
+  --cor-gradient-purple: linear-gradient(90deg, #9570af 0%, #281b37 100%);
+}
+
+body {
+  background-color: var(--color-cor-black);
+  color: white;
+  font-family: var(--font-poppins), "Poppins", system-ui, sans-serif;
+}
+
+::selection {
+  background-color: var(--color-cor-yellow);
+  color: var(--color-cor-black);
+}

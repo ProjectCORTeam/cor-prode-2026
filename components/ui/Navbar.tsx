@@ -1,0 +1,47 @@
+import Image from "next/image";
+import Link from "next/link";
+
+const links = [
+  { href: "/grupos", label: "Grupos" },
+  { href: "/prode/grupos", label: "Mi Prode" },
+  { href: "/leaderboard", label: "Leaderboard" },
+];
+
+export function Navbar() {
+  return (
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-cor-black/85 backdrop-blur">
+      <nav className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
+        <Link href="/" className="flex items-center gap-3">
+          <Image
+            src="/cor-logo-white.png"
+            alt="COR"
+            width={88}
+            height={30}
+            priority
+            className="h-7 w-auto"
+          />
+          <span className="hidden border-l border-white/20 pl-3 text-sm font-medium text-white/70 sm:inline">
+            Prode Mundial 2026
+          </span>
+        </Link>
+        <div className="flex items-center gap-1 sm:gap-2">
+          {links.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="rounded-xl px-3 py-1.5 text-sm text-white/70 transition hover:bg-white/5 hover:text-white"
+            >
+              {link.label}
+            </Link>
+          ))}
+          <Link
+            href="/auth"
+            className="rounded-xl bg-cor-yellow px-3 py-1.5 text-sm font-semibold text-cor-black transition hover:bg-cor-yellow/85"
+          >
+            Entrar
+          </Link>
+        </div>
+      </nav>
+    </header>
+  );
+}
