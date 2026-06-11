@@ -1,0 +1,10 @@
+<h2>Entrá al Prode Mundial 2026</h2>
+
+<p>Hacé clic en el enlace para entrar a tu cuenta:</p>
+<p>
+  <a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email&next={{ .RedirectTo }}">
+    Entrar al Prode
+  </a>
+</p>
+
+<p>O ingresá este código: <strong>{{ .Token }}</strong></p>

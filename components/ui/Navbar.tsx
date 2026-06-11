@@ -1,5 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
+import { createClient } from "@/lib/supabase/server";
+import { LogoutButton } from "@/components/ui/LogoutButton";
 
 const links = [
   { href: "/grupos", label: "Grupos" },
@@ -7,7 +9,12 @@ const links = [
   { href: "/leaderboard", label: "Leaderboard" },
 ];
 
-export function Navbar() {
+export async function Navbar() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-cor-black/85 backdrop-blur">
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
@@ -34,12 +41,25 @@ export function Navbar() {
               {link.label}
             </Link>
           ))}
-          <Link
-            href="/auth"
-            className="rounded-xl bg-cor-yellow px-3 py-1.5 text-sm font-semibold text-cor-black transition hover:bg-cor-yellow/85"
-          >
-            Entrar
-          </Link>
+          {user ? (
+            <div className="flex items-center gap-2 sm:gap-3">
+              <span
+                className="hidden max-w-[160px] truncate text-sm text-white/60 sm:inline"
+                title={user.email ?? undefined}
+              >
+                {user.email}
+              </span>
+              <span className="h-2 w-2 rounded-full bg-cor-green" aria-hidden />
+              <LogoutButton />
+            </div>
+          ) : (
+            <Link
+              href="/auth"
+              className="rounded-xl bg-cor-yellow px-3 py-1.5 text-sm font-semibold text-cor-black transition hover:bg-cor-yellow/85"
+            >
+              Entrar
+            </Link>
+          )}
         </div>
       </nav>
     </header>
