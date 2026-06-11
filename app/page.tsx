@@ -6,13 +6,13 @@ import { MATCHES_BY_DATE } from "@/lib/data/matches";
 import { getTeamById } from "@/lib/data/teams";
 
 const FIXTURES: Fixture[] = MATCHES_BY_DATE.map((match) => {
-  const home = getTeamById(match.homeTeamId);
-  const away = getTeamById(match.awayTeamId);
+  const home = match.homeTeamId ? getTeamById(match.homeTeamId) : null;
+  const away = match.awayTeamId ? getTeamById(match.awayTeamId) : null;
   return {
     date: match.date,
-    homeName: home?.name ?? match.homeTeamId,
+    homeName: home?.name ?? match.homeSlot ?? "Por definir",
     homeFlag: home?.flag ?? "",
-    awayName: away?.name ?? match.awayTeamId,
+    awayName: away?.name ?? match.awaySlot ?? "Por definir",
     awayFlag: away?.flag ?? "",
     venue: match.venue,
     city: match.city,
