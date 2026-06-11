@@ -6,6 +6,7 @@ import { LogoutButton } from "@/components/ui/LogoutButton";
 const links = [
   { href: "/grupos", label: "Grupos" },
   { href: "/prode/grupos", label: "Mi Prode" },
+  { href: "/prode/eliminatorias", label: "Eliminatorias" },
   { href: "/leaderboard", label: "Leaderboard" },
 ];
 

@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import type { Match } from "@/lib/data/matches";
+import { isMatchPredictable } from "@/lib/data/matches";
 import { getTeamById } from "@/lib/data/teams";
 import { usePredictionsStore } from "@/lib/store/predictions";
 
@@ -12,18 +13,21 @@ function ScoreInput({
   value,
   onChange,
   teamName,
+  disabled,
 }: {
   value: number;
   onChange: (v: number) => void;
   teamName: string;
+  disabled?: boolean;
 }) {
   return (
     <div className="flex flex-col items-center gap-1">
       <button
         type="button"
         aria-label={`Sumar gol a ${teamName}`}
+        disabled={disabled}
         onClick={() => onChange(Math.min(20, value + 1))}
-        className="flex h-7 w-10 items-center justify-center rounded-lg bg-white/5 text-white/60 transition hover:bg-cor-aqua/30 hover:text-white"
+        className="flex h-7 w-10 items-center justify-center rounded-lg bg-white/5 text-white/60 transition hover:bg-cor-aqua/30 hover:text-white disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-white/5 disabled:hover:text-white/60"
       >
         ▲
       </button>
@@ -42,8 +46,9 @@ function ScoreInput({
       <button
         type="button"
         aria-label={`Restar gol a ${teamName}`}
+        disabled={disabled}
         onClick={() => onChange(Math.max(0, value - 1))}
-        className="flex h-7 w-10 items-center justify-center rounded-lg bg-white/5 text-white/60 transition hover:bg-cor-aqua/30 hover:text-white"
+        className="flex h-7 w-10 items-center justify-center rounded-lg bg-white/5 text-white/60 transition hover:bg-cor-aqua/30 hover:text-white disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-white/5 disabled:hover:text-white/60"
       >
         ▼
       </button>
@@ -51,29 +56,49 @@ function ScoreInput({
   );
 }
 
+function TeamSide({
+  flag,
+  name,
+}: {
+  flag: string;
+  name: string;
+}) {
+  return (
+    <div className="flex flex-1 flex-col items-center gap-1">
+      <span className="text-4xl">{flag}</span>
+      <span className="text-center text-sm font-semibold">{name}</span>
+    </div>
+  );
+}
+
 export function MatchPredictionCard({ match }: { match: Match }) {
-  const home = getTeamById(match.homeTeamId);
-  const away = getTeamById(match.awayTeamId);
+  const predictable = isMatchPredictable(match);
+  const home = match.homeTeamId ? getTeamById(match.homeTeamId) : null;
+  const away = match.awayTeamId ? getTeamById(match.awayTeamId) : null;
 
   const saved = usePredictionsStore((s) => s.predictions[match.id]);
   const setPrediction = usePredictionsStore((s) => s.setPrediction);
 
-  // El estado local solo guarda la edición en curso; si es null se muestra
-  // lo persistido en el store (derivado, sin efectos de sincronización).
   const [draft, setDraft] = useState<{ home: number; away: number } | null>(null);
   const [justSaved, setJustSaved] = useState(false);
 
-  if (!home || !away) return null;
+  const homeLabel = home?.name ?? match.homeSlot ?? "Por definir";
+  const awayLabel = away?.name ?? match.awaySlot ?? "Por definir";
+  const homeFlag = home?.flag ?? "❓";
+  const awayFlag = away?.flag ?? "❓";
 
   const homeScore = draft?.home ?? saved?.homeScore ?? 0;
   const awayScore = draft?.away ?? saved?.awayScore ?? 0;
 
-  const isDirty = !saved || saved.homeScore !== homeScore || saved.awayScore !== awayScore;
+  const isDirty =
+    predictable &&
+    (!saved || saved.homeScore !== homeScore || saved.awayScore !== awayScore);
 
   const setHomeScore = (v: number) => setDraft({ home: v, away: awayScore });
   const setAwayScore = (v: number) => setDraft({ home: homeScore, away: v });
 
   const handleSave = () => {
+    if (!predictable) return;
     setPrediction(match.id, homeScore, awayScore);
     setDraft(null);
     setJustSaved(true);
@@ -87,55 +112,68 @@ export function MatchPredictionCard({ match }: { match: Match }) {
       transition={{ duration: 0.35 }}
       className="rounded-2xl border border-white/10 bg-cor-navy/25 p-5 backdrop-blur"
     >
+      <p className="mb-1 text-center text-xs text-white/40">
+        Partido {match.matchNumber}
+      </p>
       <p className="mb-4 text-center text-xs text-white/50">
         {format(new Date(match.date), "EEEE d 'de' MMMM, HH:mm", { locale: es })} ·{" "}
         <span className="text-white/70">{match.venue}</span>, {match.city}
       </p>
 
       <div className="flex items-center justify-between gap-2">
-        <div className="flex flex-1 flex-col items-center gap-1">
-          <span className="text-4xl">{home.flag}</span>
-          <span className="text-center text-sm font-semibold">{home.name}</span>
-        </div>
+        <TeamSide flag={homeFlag} name={homeLabel} />
 
-        <ScoreInput value={homeScore} onChange={setHomeScore} teamName={home.name} />
+        <ScoreInput
+          value={homeScore}
+          onChange={setHomeScore}
+          teamName={homeLabel}
+          disabled={!predictable}
+        />
         <span className="text-xl text-white/30">–</span>
-        <ScoreInput value={awayScore} onChange={setAwayScore} teamName={away.name} />
+        <ScoreInput
+          value={awayScore}
+          onChange={setAwayScore}
+          teamName={awayLabel}
+          disabled={!predictable}
+        />
 
-        <div className="flex flex-1 flex-col items-center gap-1">
-          <span className="text-4xl">{away.flag}</span>
-          <span className="text-center text-sm font-semibold">{away.name}</span>
-        </div>
+        <TeamSide flag={awayFlag} name={awayLabel} />
       </div>
 
       <div className="mt-5 flex justify-center">
-        <AnimatePresence mode="wait" initial={false}>
-          {justSaved ? (
-            <motion.span
-              key="saved"
-              initial={{ scale: 0.7, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.7, opacity: 0 }}
-              className="flex h-10 items-center gap-2 rounded-xl bg-cor-green/15 px-6 font-semibold text-cor-green"
-            >
-              ✓ Guardado
-            </motion.span>
-          ) : (
-            <motion.button
-              key="save"
-              type="button"
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={handleSave}
-              disabled={!isDirty}
-              className="h-10 rounded-xl bg-cor-yellow px-6 font-semibold text-cor-black transition hover:bg-cor-yellow/85 disabled:cursor-not-allowed disabled:bg-white/10 disabled:text-white/40"
-            >
-              {saved && !isDirty ? "✓ Guardado" : "Guardar pronóstico"}
-            </motion.button>
-          )}
-        </AnimatePresence>
+        {!predictable ? (
+          <span className="flex h-10 items-center rounded-xl bg-white/5 px-6 text-sm text-white/50">
+            Equipos por definir
+          </span>
+        ) : (
+          <AnimatePresence mode="wait" initial={false}>
+            {justSaved ? (
+              <motion.span
+                key="saved"
+                initial={{ scale: 0.7, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.7, opacity: 0 }}
+                className="flex h-10 items-center gap-2 rounded-xl bg-cor-green/15 px-6 font-semibold text-cor-green"
+              >
+                ✓ Guardado
+              </motion.span>
+            ) : (
+              <motion.button
+                key="save"
+                type="button"
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={handleSave}
+                disabled={!isDirty}
+                className="h-10 rounded-xl bg-cor-yellow px-6 font-semibold text-cor-black transition hover:bg-cor-yellow/85 disabled:cursor-not-allowed disabled:bg-white/10 disabled:text-white/40"
+              >
+                {saved && !isDirty ? "✓ Guardado" : "Guardar pronóstico"}
+              </motion.button>
+            )}
+          </AnimatePresence>
+        )}
       </div>
     </motion.div>
   );

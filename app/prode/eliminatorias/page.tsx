@@ -5,22 +5,33 @@ import { motion, AnimatePresence } from "motion/react";
 import { MatchPredictionCard } from "@/components/match/MatchPredictionCard";
 import { ProdeNav } from "@/components/prode/ProdeNav";
 import {
-  getMatchesByGroup,
-  GROUP_MATCH_IDS,
-  TOTAL_GROUP_MATCHES,
+  KNOCKOUT_PHASES,
+  getMatchesByPhase,
+  isMatchPredictable,
+  TOTAL_KNOCKOUT_MATCHES,
+  type MatchPhase,
 } from "@/lib/data/matches";
-import { GROUPS, type Group } from "@/lib/data/teams";
 import { usePredictionsStore } from "@/lib/store/predictions";
 
-export default function ProdeGruposPage() {
-  const [activeGroup, setActiveGroup] = useState<Group>("A");
+export default function ProdeEliminatoriasPage() {
+  const [activePhase, setActivePhase] = useState<MatchPhase>("r32");
   const predictions = usePredictionsStore((s) => s.predictions);
 
-  const predicted = Object.keys(predictions).filter((id) =>
-    GROUP_MATCH_IDS.has(id),
-  ).length;
-  const progress = (predicted / TOTAL_GROUP_MATCHES) * 100;
-  const matches = getMatchesByGroup(activeGroup);
+  const predictableMatches = KNOCKOUT_PHASES.flatMap(({ phase }) =>
+    getMatchesByPhase(phase).filter(isMatchPredictable),
+  );
+  const predictableIds = new Set(predictableMatches.map((m) => m.id));
+
+  const predicted = predictableIds.size
+    ? Object.keys(predictions).filter((id) => predictableIds.has(id)).length
+    : 0;
+  const predictableTotal = predictableMatches.length;
+  const progress =
+    predictableTotal > 0 ? (predicted / predictableTotal) * 100 : 0;
+
+  const matches = getMatchesByPhase(activePhase);
+  const activeLabel =
+    KNOCKOUT_PHASES.find((p) => p.phase === activePhase)?.label ?? activePhase;
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-12">
@@ -29,18 +40,18 @@ export default function ProdeGruposPage() {
           Mi <span className="text-cor-yellow">Prode</span>
         </h1>
         <p className="mt-3 text-white/60">
-          Pronosticá los 72 partidos de la fase de grupos.
+          {TOTAL_KNOCKOUT_MATCHES} partidos de la fase eliminatoria. Los cruces
+          se habilitan cuando se definan los equipos.
         </p>
       </div>
 
       <ProdeNav />
 
-      {/* Barra de progreso */}
       <div className="mb-8 rounded-2xl border border-white/10 bg-cor-navy/25 p-4 backdrop-blur">
         <div className="mb-2 flex items-center justify-between text-sm">
-          <span className="text-white/70">Progreso fase de grupos</span>
+          <span className="text-white/70">Progreso eliminatorias</span>
           <span className="font-semibold tabular-nums text-cor-yellow">
-            {predicted} / {TOTAL_GROUP_MATCHES}
+            {predicted} / {predictableTotal || "—"}
           </span>
         </div>
         <div className="h-3 overflow-hidden rounded-full bg-white/10">
@@ -51,27 +62,33 @@ export default function ProdeGruposPage() {
             transition={{ duration: 0.6, ease: "easeOut" }}
           />
         </div>
+        {predictableTotal === 0 && (
+          <p className="mt-2 text-center text-xs text-white/40">
+            Todavía no hay equipos definidos para la fase eliminatoria.
+          </p>
+        )}
       </div>
 
-      {/* Tabs A-L */}
       <div className="mb-8 flex flex-wrap justify-center gap-2">
-        {GROUPS.map((group) => {
-          const groupMatches = getMatchesByGroup(group);
-          const groupDone = groupMatches.every((m) => predictions[m.id]);
-          const isActive = group === activeGroup;
+        {KNOCKOUT_PHASES.map(({ phase, label }) => {
+          const phaseMatches = getMatchesByPhase(phase);
+          const phaseDone = phaseMatches.every(
+            (m) => !isMatchPredictable(m) || predictions[m.id],
+          );
+          const isActive = phase === activePhase;
           return (
             <button
-              key={group}
+              key={phase}
               type="button"
-              onClick={() => setActiveGroup(group)}
-              className={`relative flex h-11 w-11 items-center justify-center rounded-xl font-semibold transition ${
+              onClick={() => setActivePhase(phase)}
+              className={`relative rounded-xl px-4 py-2 text-sm font-semibold transition ${
                 isActive
                   ? "bg-cor-yellow text-cor-black"
                   : "bg-white/5 text-white/60 hover:bg-white/10 hover:text-white"
               }`}
             >
-              {group}
-              {groupDone && (
+              {label}
+              {phaseDone && phaseMatches.some(isMatchPredictable) && (
                 <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-cor-green text-[9px] text-cor-black">
                   ✓
                 </span>
@@ -81,19 +98,22 @@ export default function ProdeGruposPage() {
         })}
       </div>
 
-      {/* Partidos del grupo activo */}
       <AnimatePresence mode="wait">
         <motion.div
-          key={activeGroup}
+          key={activePhase}
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -12 }}
           transition={{ duration: 0.25 }}
-          className="grid grid-cols-1 gap-5 lg:grid-cols-2 xl:grid-cols-3"
         >
-          {matches.map((match) => (
-            <MatchPredictionCard key={match.id} match={match} />
-          ))}
+          <h2 className="mb-5 text-center text-lg font-semibold text-white/80">
+            {activeLabel}
+          </h2>
+          <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+            {matches.map((match) => (
+              <MatchPredictionCard key={match.id} match={match} />
+            ))}
+          </div>
         </motion.div>
       </AnimatePresence>
     </div>
