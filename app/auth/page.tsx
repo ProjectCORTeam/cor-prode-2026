@@ -22,7 +22,7 @@ export default function AuthPage() {
       const { error } = await supabase.auth.signInWithOtp({
         email,
         options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback?next=/prode/grupos`,
+          emailRedirectTo: `${window.location.origin}/prode/grupos`,
         },
       });
       if (error) throw error;
