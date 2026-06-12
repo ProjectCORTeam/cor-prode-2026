@@ -25,29 +25,29 @@ export function GroupTable({ group }: { group: string }) {
       initial="hidden"
       whileInView="show"
       viewport={{ once: true, margin: "-40px" }}
-      className="overflow-hidden rounded-2xl border border-white/10 bg-cor-navy/25 backdrop-blur"
+      className="cor-card overflow-hidden rounded-2xl"
     >
-      <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
+      <div className="flex items-center justify-between border-b border-cor-border px-4 py-3">
         <h3 className="text-lg font-semibold">
-          Grupo <span className="text-cor-yellow">{group}</span>
+          Grupo <span className="text-cor-action">{group}</span>
         </h3>
-        <span className="text-xs uppercase tracking-widest text-white/40">FIFA 2026</span>
+        <span className="text-xs uppercase tracking-widest text-cor-muted">FIFA 2026</span>
       </div>
       <ul>
         {teams.map((team, i) => (
           <motion.li
             key={team.id}
             variants={row}
-            className="flex items-center gap-3 border-b border-white/5 px-4 py-3 last:border-b-0 hover:bg-white/5"
+            className="flex items-center gap-3 border-b border-cor-border px-4 py-3 last:border-b-0 hover:bg-cor-surface-alt/50"
           >
-            <span className="w-5 text-center text-sm tabular-nums text-white/40">{i + 1}</span>
+            <span className="w-5 text-center text-sm tabular-nums text-cor-muted">{i + 1}</span>
             <span className="text-2xl leading-none">{team.flag}</span>
             <span className="flex-1 truncate font-medium">{team.name}</span>
-            <span className="rounded-full bg-white/5 px-2 py-0.5 text-[10px] uppercase tracking-wider text-white/50">
+            <span className="rounded-full bg-cor-surface px-2 py-0.5 text-[10px] uppercase tracking-wider text-cor-muted">
               {team.confederation}
             </span>
             {team.fifaRank && (
-              <span className="w-8 text-right text-xs tabular-nums text-cor-aqua">
+              <span className="w-8 text-right text-xs tabular-nums text-cor-teal">
                 #{team.fifaRank}
               </span>
             )}
