@@ -122,14 +122,15 @@
 }
 
 .dark {
-  --cor-bg-primary: var(--color-cor-deep-plum);
+  /* Dark mode anclado en el navy de marca (no plum) */
+  --cor-bg-primary: #0e1530;
   --cor-bg-secondary: var(--color-cor-black);
-  --cor-bg-surface: var(--color-cor-plum);
-  --cor-bg-surface-alt: #3d2555;
+  --cor-bg-surface: var(--color-cor-navy);
+  --cor-bg-surface-alt: #243154;
 
   --cor-text-primary: var(--color-cor-white);
-  --cor-text-secondary: var(--color-cor-lavender);
-  --cor-text-tertiary: #a78bbf;
+  --cor-text-secondary: #c9d6ef;
+  --cor-text-tertiary: #8a9bc0;
 
   --cor-border-default: rgba(255, 255, 255, 0.1);
   --cor-border-strong: rgba(255, 255, 255, 0.2);
