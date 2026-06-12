@@ -41,20 +41,27 @@ export default function AuthPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
-        className="w-full max-w-md rounded-2xl border border-white/10 bg-cor-navy/25 p-8 backdrop-blur"
+        className="cor-card w-full max-w-md rounded-2xl p-8"
       >
         <div className="mb-8 flex flex-col items-center text-center">
+          <Image
+            src="/cor-logo-black.png"
+            alt="COR"
+            width={110}
+            height={37}
+            className="h-9 w-auto dark:hidden"
+          />
           <Image
             src="/cor-logo-white.png"
             alt="COR"
             width={110}
             height={37}
-            className="h-9 w-auto"
+            className="hidden h-9 w-auto dark:block"
           />
-          <h1 className="mt-6 text-3xl font-semibold">
-            Entrá al <span className="text-cor-yellow">Prode</span>
+          <h1 className="mt-6 text-3xl font-bold tracking-tight">
+            Entrá al <span className="text-cor-action">Prode</span>
           </h1>
-          <p className="mt-2 text-sm text-white/60">
+          <p className="mt-2 text-sm text-cor-muted">
             Te enviamos un enlace mágico a tu email de COR. Sin contraseñas.
           </p>
         </div>
@@ -67,7 +74,7 @@ export default function AuthPage() {
           >
             <p className="text-2xl">📬</p>
             <p className="mt-2 font-semibold text-cor-green">¡Enlace enviado!</p>
-            <p className="mt-1 text-sm text-white/60">
+            <p className="mt-1 text-sm text-cor-muted">
               Revisá tu bandeja de entrada en <strong>{email}</strong> y hacé
               clic en el enlace para entrar.
             </p>
@@ -75,7 +82,7 @@ export default function AuthPage() {
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="email" className="mb-1.5 block text-sm text-white/70">
+              <label htmlFor="email" className="mb-1.5 block text-sm text-cor-muted">
                 Email
               </label>
               <input
@@ -85,19 +92,19 @@ export default function AuthPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="vos@projectcor.com"
-                className="w-full rounded-xl border border-white/10 bg-cor-black/60 px-4 py-3 outline-none transition placeholder:text-white/30 focus:border-cor-yellow"
+                className="w-full rounded-xl border border-cor-border bg-cor-bg px-4 py-3 outline-none transition placeholder:text-cor-muted/60 focus:border-cor-action"
               />
             </div>
 
             {status === "error" && (
-              <p className="text-sm text-red-400">{errorMessage}</p>
+              <p className="text-sm text-cor-error">{errorMessage}</p>
             )}
 
             <motion.button
               type="submit"
               whileTap={{ scale: 0.97 }}
               disabled={status === "loading"}
-              className="w-full rounded-xl bg-cor-yellow py-3 font-semibold text-cor-black transition hover:bg-cor-yellow/85 disabled:opacity-50"
+              className="w-full rounded-xl bg-cor-action py-3 font-semibold text-cor-inverse transition hover:bg-cor-blue/90 disabled:opacity-50"
             >
               {status === "loading" ? "Enviando…" : "Enviarme el enlace mágico ✨"}
             </motion.button>

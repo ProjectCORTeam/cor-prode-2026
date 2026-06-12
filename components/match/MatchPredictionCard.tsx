@@ -27,7 +27,7 @@ function ScoreInput({
         aria-label={`Sumar gol a ${teamName}`}
         disabled={disabled}
         onClick={() => onChange(Math.min(20, value + 1))}
-        className="flex h-7 w-10 items-center justify-center rounded-lg bg-white/5 text-white/60 transition hover:bg-cor-aqua/30 hover:text-white disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-white/5 disabled:hover:text-white/60"
+        className="flex h-7 w-10 items-center justify-center rounded-lg bg-cor-surface text-cor-muted transition hover:bg-cor-teal/30 hover:text-cor-heading disabled:cursor-not-allowed disabled:opacity-40"
       >
         ▲
       </button>
@@ -38,7 +38,7 @@ function ScoreInput({
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.6, opacity: 0 }}
           transition={{ duration: 0.15 }}
-          className="text-3xl font-semibold tabular-nums text-cor-yellow"
+          className="text-3xl font-semibold tabular-nums text-cor-action"
         >
           {value}
         </motion.span>
@@ -48,7 +48,7 @@ function ScoreInput({
         aria-label={`Restar gol a ${teamName}`}
         disabled={disabled}
         onClick={() => onChange(Math.max(0, value - 1))}
-        className="flex h-7 w-10 items-center justify-center rounded-lg bg-white/5 text-white/60 transition hover:bg-cor-aqua/30 hover:text-white disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-white/5 disabled:hover:text-white/60"
+        className="flex h-7 w-10 items-center justify-center rounded-lg bg-cor-surface text-cor-muted transition hover:bg-cor-teal/30 hover:text-cor-heading disabled:cursor-not-allowed disabled:opacity-40"
       >
         ▼
       </button>
@@ -110,14 +110,14 @@ export function MatchPredictionCard({ match }: { match: Match }) {
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35 }}
-      className="rounded-2xl border border-white/10 bg-cor-navy/25 p-5 backdrop-blur"
+      className="cor-card rounded-2xl p-5"
     >
-      <p className="mb-1 text-center text-xs text-white/40">
+      <p className="mb-1 text-center text-xs text-cor-muted">
         Partido {match.matchNumber}
       </p>
-      <p className="mb-4 text-center text-xs text-white/50">
+      <p className="mb-4 text-center text-xs text-cor-muted">
         {format(new Date(match.date), "EEEE d 'de' MMMM, HH:mm", { locale: es })} ·{" "}
-        <span className="text-white/70">{match.venue}</span>, {match.city}
+        <span className="text-cor-heading">{match.venue}</span>, {match.city}
       </p>
 
       <div className="flex items-center justify-between gap-2">
@@ -129,7 +129,7 @@ export function MatchPredictionCard({ match }: { match: Match }) {
           teamName={homeLabel}
           disabled={!predictable}
         />
-        <span className="text-xl text-white/30">–</span>
+        <span className="text-xl text-cor-muted">–</span>
         <ScoreInput
           value={awayScore}
           onChange={setAwayScore}
@@ -142,7 +142,7 @@ export function MatchPredictionCard({ match }: { match: Match }) {
 
       <div className="mt-5 flex justify-center">
         {!predictable ? (
-          <span className="flex h-10 items-center rounded-xl bg-white/5 px-6 text-sm text-white/50">
+          <span className="flex h-10 items-center rounded-xl bg-cor-surface px-6 text-sm text-cor-muted">
             Equipos por definir
           </span>
         ) : (
@@ -167,7 +167,7 @@ export function MatchPredictionCard({ match }: { match: Match }) {
                 whileTap={{ scale: 0.95 }}
                 onClick={handleSave}
                 disabled={!isDirty}
-                className="h-10 rounded-xl bg-cor-yellow px-6 font-semibold text-cor-black transition hover:bg-cor-yellow/85 disabled:cursor-not-allowed disabled:bg-white/10 disabled:text-white/40"
+                className="h-10 rounded-xl bg-cor-action px-6 text-lg font-semibold text-cor-inverse transition hover:bg-cor-blue/90 disabled:cursor-not-allowed disabled:bg-cor-surface disabled:text-cor-muted"
               >
                 {saved && !isDirty ? "✓ Guardado" : "Guardar pronóstico"}
               </motion.button>

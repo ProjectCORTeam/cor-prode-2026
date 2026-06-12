@@ -1,46 +1,174 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 /*
- * COR — Visual Identity System (Nov 2025)
- * Base: negro + blanco · Acento de firma: amarillo
- * Secundaria fría (uso moderado): aqua, blue, green, navy
+ * COR Global Design System
+ * Light-first · Navy anchor · Blue interaction · No yellow
  */
-@theme {
-  /* Neutra (base) */
-  --color-cor-black: #20201f;
-  --color-cor-black-pure: #000000;
+@theme inline {
+  /* Raw palette */
+  --color-cor-black: #000000;
   --color-cor-white: #ffffff;
-  --color-cor-yellow: #fbde3f;
-
-  /* Secundaria (fría) */
-  --color-cor-aqua-light: #8fd3eb;
-  --color-cor-aqua: #48bcd0;
-  --color-cor-blue: #2f7ec9;
-  --color-cor-green: #03cc7a;
   --color-cor-navy: #1a2442;
-
-  /* Terciaria (púrpuras) */
-  --color-cor-lavender-light: #e8d8e8;
+  --color-cor-blue: #2f7ec9;
+  --color-cor-teal: #48bcd0;
+  --color-cor-green: #03cc7a;
+  --color-cor-lavender: #e8d8e8;
   --color-cor-purple: #9570af;
   --color-cor-plum: #4d3569;
-  --color-cor-plum-dark: #281b37;
+  --color-cor-deep-plum: #281b37;
+  --color-cor-warning: #f6ad55;
+  --color-cor-error: #e53e3e;
+
+  /* Semantic (theme-aware via CSS vars) */
+  --color-cor-bg: var(--cor-bg-primary);
+  --color-cor-surface: var(--cor-bg-surface);
+  --color-cor-surface-alt: var(--cor-bg-surface-alt);
+  --color-cor-muted: var(--cor-text-tertiary);
+  --color-cor-heading: var(--cor-text-secondary);
+  --color-cor-inverse: var(--cor-text-inverse);
+  --color-cor-action: var(--cor-action-primary);
+  --color-cor-action-hover: var(--cor-action-hover);
+  --color-cor-border: var(--cor-border-default);
+  --color-cor-border-strong: var(--cor-border-strong);
+
+  /* Spacing (4px base) */
+  --spacing-cor-1: 4px;
+  --spacing-cor-2: 8px;
+  --spacing-cor-3: 12px;
+  --spacing-cor-4: 16px;
+  --spacing-cor-5: 20px;
+  --spacing-cor-6: 24px;
+  --spacing-cor-8: 32px;
+  --spacing-cor-10: 40px;
+  --spacing-cor-12: 48px;
+  --spacing-cor-16: 64px;
+  --spacing-cor-20: 80px;
+  --spacing-cor-24: 96px;
+
+  /* Typography */
+  --text-cor-xs: 0.75rem;
+  --text-cor-sm: 0.875rem;
+  --text-cor-base: 1rem;
+  --text-cor-lg: 1.125rem;
+  --text-cor-xl: 1.25rem;
+  --text-cor-2xl: 1.5rem;
+  --text-cor-3xl: 1.875rem;
+  --text-cor-4xl: 2.25rem;
+  --text-cor-5xl: 3rem;
+
+  /* Radius */
+  --radius-cor-sm: 4px;
+  --radius-cor-md: 8px;
+  --radius-cor-lg: 12px;
+  --radius-cor-xl: 16px;
+  --radius-cor-full: 9999px;
+
+  /* Shadows (navy-tinted) */
+  --shadow-cor-xs: 0 1px 2px rgba(26, 36, 66, 0.04);
+  --shadow-cor-sm: 0 1px 3px rgba(26, 36, 66, 0.06);
+  --shadow-cor-md: 0 4px 12px rgba(26, 36, 66, 0.1);
+  --shadow-cor-lg: 0 8px 24px rgba(26, 36, 66, 0.14);
+  --shadow-cor-xl: 0 16px 48px rgba(26, 36, 66, 0.18);
 
   --font-sans: var(--font-poppins);
 }
 
 :root {
-  /* Gradientes oficiales: solo 90°/180°, claro → oscuro de izquierda a derecha */
-  --cor-gradient-cool: linear-gradient(90deg, #48bcd0 0%, #2f7ec9 100%);
-  --cor-gradient-purple: linear-gradient(90deg, #9570af 0%, #281b37 100%);
+  /* Semantic: Light theme (default) */
+  --cor-bg-primary: var(--color-cor-white);
+  --cor-bg-secondary: var(--color-cor-navy);
+  --cor-bg-surface: #f7f8fa;
+  --cor-bg-surface-alt: var(--color-cor-lavender);
+  --cor-bg-overlay: rgba(0, 0, 0, 0.5);
+
+  --cor-text-primary: var(--color-cor-black);
+  --cor-text-secondary: var(--color-cor-navy);
+  --cor-text-tertiary: #6b7280;
+  --cor-text-inverse: var(--color-cor-white);
+
+  --cor-action-primary: var(--color-cor-blue);
+  --cor-action-hover: var(--color-cor-teal);
+  --cor-action-success: var(--color-cor-green);
+  --cor-action-warning: var(--color-cor-warning);
+  --cor-action-error: var(--color-cor-error);
+
+  --cor-accent-primary: var(--color-cor-purple);
+  --cor-accent-dark: var(--color-cor-plum);
+
+  --cor-border-default: rgba(0, 0, 0, 0.08);
+  --cor-border-strong: rgba(0, 0, 0, 0.16);
+  --cor-border-focus: var(--color-cor-blue);
+
+  /* Gradients (3-stop, horizontal/vertical only) */
+  --cor-gradient-n1: linear-gradient(90deg, #03cc7a, #48bcd0, #2f7ec9);
+  --cor-gradient-n1-v: linear-gradient(0deg, #03cc7a, #48bcd0, #2f7ec9);
+  --cor-gradient-n2: linear-gradient(90deg, #9570af, #4d3569, #281b37);
+  --cor-gradient-n2-v: linear-gradient(0deg, #9570af, #4d3569, #281b37);
+
+  /* Z-index */
+  --cor-z-base: 0;
+  --cor-z-above: 10;
+  --cor-z-sticky: 20;
+  --cor-z-modal: 30;
+  --cor-z-toast: 40;
+  --cor-z-top: 50;
+
+  /* Transitions */
+  --cor-transition-fast: 150ms ease-in-out;
+  --cor-transition-normal: 250ms ease-in-out;
+  --cor-transition-slow: 400ms ease-in-out;
+}
+
+.dark {
+  /* Dark mode anclado en el navy de marca (no plum) */
+  --cor-bg-primary: #0e1530;
+  --cor-bg-secondary: var(--color-cor-black);
+  --cor-bg-surface: var(--color-cor-navy);
+  --cor-bg-surface-alt: #243154;
+
+  --cor-text-primary: var(--color-cor-white);
+  --cor-text-secondary: #c9d6ef;
+  --cor-text-tertiary: #8a9bc0;
+
+  --cor-border-default: rgba(255, 255, 255, 0.1);
+  --cor-border-strong: rgba(255, 255, 255, 0.2);
 }
 
 body {
-  background-color: var(--color-cor-black);
-  color: white;
+  background-color: var(--cor-bg-primary);
+  color: var(--cor-text-primary);
   font-family: var(--font-poppins), "Poppins", system-ui, sans-serif;
+  transition:
+    background-color var(--cor-transition-normal),
+    color var(--cor-transition-normal);
 }
 
 ::selection {
-  background-color: var(--color-cor-yellow);
-  color: var(--color-cor-black);
+  background-color: var(--color-cor-blue);
+  color: var(--color-cor-white);
+}
+
+/* Reusable surface pattern */
+.cor-card {
+  border: 1px solid var(--cor-border-default);
+  background-color: var(--cor-bg-surface);
+  box-shadow: var(--shadow-cor-md);
+}
+
+.cor-btn-primary {
+  background-color: var(--cor-action-primary);
+  color: var(--cor-text-inverse);
+  border-radius: var(--radius-cor-md);
+  font-weight: 600;
+  transition: background-color var(--cor-transition-fast);
+}
+
+.cor-btn-primary:hover:not(:disabled) {
+  background-color: color-mix(in srgb, var(--cor-action-primary) 90%, black);
+}
+
+.cor-gradient-n1 {
+  background: var(--cor-gradient-n1);
 }

@@ -21,8 +21,8 @@ export function ProdeNav() {
             href={tab.href}
             className={`rounded-xl px-5 py-2.5 text-sm font-semibold transition ${
               isActive
-                ? "bg-cor-yellow text-cor-black"
-                : "bg-white/5 text-white/60 hover:bg-white/10 hover:text-white"
+                ? "bg-cor-action text-cor-inverse"
+                : "bg-cor-surface text-cor-muted hover:bg-cor-surface-alt hover:text-cor-heading"
             }`}
           >
             {tab.label}

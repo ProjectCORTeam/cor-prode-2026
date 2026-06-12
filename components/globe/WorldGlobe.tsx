@@ -20,7 +20,6 @@ function Globe() {
 
   return (
     <group ref={globeRef}>
-      {/* Esfera principal — navy COR */}
       <Sphere args={[1.6, 64, 64]}>
         <meshStandardMaterial
           color="#1a2442"
@@ -30,13 +29,11 @@ function Globe() {
           emissiveIntensity={0.12}
         />
       </Sphere>
-      {/* Malla exterior estilo holograma — aqua COR */}
       <Sphere ref={wireRef} args={[1.68, 32, 32]}>
         <meshBasicMaterial color="#48bcd0" wireframe transparent opacity={0.16} />
       </Sphere>
-      {/* Halo amarillo de firma */}
       <Sphere args={[1.78, 32, 32]}>
-        <meshBasicMaterial color="#fbde3f" wireframe transparent opacity={0.05} />
+        <meshBasicMaterial color="#2f7ec9" wireframe transparent opacity={0.05} />
       </Sphere>
     </group>
   );
@@ -47,8 +44,7 @@ export function WorldGlobe() {
     <div className="h-full w-full" aria-label="Globo terráqueo 3D">
       <Canvas camera={{ position: [0, 0, 5], fov: 45 }} dpr={[1, 2]}>
         <ambientLight intensity={0.4} />
-        {/* Luz puntual amarilla (acento de firma COR) */}
-        <pointLight position={[5, 3, 5]} intensity={110} color="#fbde3f" />
+        <pointLight position={[5, 3, 5]} intensity={110} color="#2f7ec9" />
         <pointLight position={[-5, -2, -4]} intensity={45} color="#48bcd0" />
         <Stars radius={60} depth={40} count={4000} factor={4} saturation={0} fade speed={0.6} />
         <Globe />

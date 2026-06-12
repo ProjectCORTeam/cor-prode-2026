@@ -21,8 +21,8 @@ const FIXTURES: Fixture[] = MATCHES_BY_DATE.map((match) => {
 
 export default function HomePage() {
   return (
-    <div className="relative min-h-[calc(100vh-57px)] overflow-hidden">
-      {/* Globo de fondo */}
+    <div className="relative min-h-[calc(100vh-57px)] overflow-hidden bg-cor-navy">
+      {/* Globo de fondo — sección oscura decorativa */}
       <div className="absolute inset-0">
         <WorldGlobe />
       </div>
@@ -39,35 +39,38 @@ export default function HomePage() {
               priority
               className="h-9 w-auto"
             />
-            <span className="rounded-full border border-cor-yellow/40 px-3 py-1 text-xs font-medium uppercase tracking-[0.2em] text-cor-yellow">
+            <span className="rounded-full border border-cor-blue/40 px-3 py-1 text-xs font-medium uppercase tracking-[0.2em] text-cor-teal">
               Prode interno
             </span>
           </div>
-          <h1 className="text-5xl font-semibold tracking-tight sm:text-7xl">
-            Prode <span className="text-cor-yellow">Mundial</span>
+          <h1 className="text-5xl font-bold tracking-tight text-cor-white sm:text-7xl">
+            Prode <span className="text-cor-blue">Mundial</span>
             <br />
-            <span className="bg-gradient-to-r from-cor-aqua to-cor-blue bg-clip-text text-transparent">
+            <span
+              className="bg-clip-text text-transparent"
+              style={{ backgroundImage: "var(--cor-gradient-n1)" }}
+            >
               FIFA 2026
             </span>
           </h1>
-          <p className="mx-auto max-w-xl text-lg text-white/70">
+          <p className="mx-auto max-w-xl text-lg text-cor-lavender/80">
             48 selecciones, 12 grupos, un solo campeón. Pronosticá cada partido
             y competí con todo el equipo de COR.
           </p>
         </div>
 
-        <Countdown fixtures={FIXTURES} />
+        <Countdown fixtures={FIXTURES} variant="hero" />
 
         <div className="pointer-events-auto flex flex-col gap-3 sm:flex-row">
           <Link
             href="/prode/grupos"
-            className="rounded-xl bg-cor-yellow px-8 py-3 text-lg font-semibold text-cor-black transition hover:scale-105 hover:bg-cor-yellow/85"
+            className="rounded-xl bg-cor-action px-8 py-3 text-lg font-semibold text-cor-inverse transition hover:scale-105 hover:bg-cor-blue/90"
           >
             Hacer mi prode ⚽
           </Link>
           <Link
             href="/grupos"
-            className="rounded-xl border border-white/25 bg-cor-navy/30 px-8 py-3 text-lg font-semibold text-white backdrop-blur transition hover:scale-105 hover:bg-cor-navy/50"
+            className="rounded-xl border border-cor-white/25 bg-cor-navy/30 px-8 py-3 text-lg font-semibold text-cor-white backdrop-blur transition hover:scale-105 hover:bg-cor-navy/50"
           >
             Ver grupos
           </Link>

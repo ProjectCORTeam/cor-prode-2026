@@ -9,7 +9,7 @@ export const WorldGlobe = dynamic(
     ssr: false,
     loading: () => (
       <div className="flex h-full w-full items-center justify-center">
-        <span className="animate-pulse text-white/30">Cargando globo…</span>
+        <span className="animate-pulse text-cor-lavender/30">Cargando globo…</span>
       </div>
     ),
   },
