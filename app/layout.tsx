@@ -29,7 +29,7 @@ export default function RootLayout({
         <Navbar />
         <main className="flex-1">{children}</main>
         <footer className="border-t border-white/10 px-4 py-6 text-center text-xs text-white/40">
-          COR · Value your ideas
+          COR · Make it count
         </footer>
       </body>
     </html>
