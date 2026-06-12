@@ -58,7 +58,7 @@ export default function AuthPage() {
             height={37}
             className="hidden h-9 w-auto dark:block"
           />
-          <h1 className="mt-6 text-3xl font-semibold">
+          <h1 className="mt-6 text-3xl font-bold tracking-tight">
             Entrá al <span className="text-cor-action">Prode</span>
           </h1>
           <p className="mt-2 text-sm text-cor-muted">

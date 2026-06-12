@@ -43,7 +43,7 @@ export default function HomePage() {
               Prode interno
             </span>
           </div>
-          <h1 className="text-5xl font-semibold tracking-tight text-cor-white sm:text-7xl">
+          <h1 className="text-5xl font-bold tracking-tight text-cor-white sm:text-7xl">
             Prode <span className="text-cor-blue">Mundial</span>
             <br />
             <span

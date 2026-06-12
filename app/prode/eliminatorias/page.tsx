@@ -36,7 +36,7 @@ export default function ProdeEliminatoriasPage() {
   return (
     <div className="mx-auto max-w-5xl px-4 py-12">
       <div className="mb-8 text-center">
-        <h1 className="text-4xl font-semibold sm:text-5xl">
+        <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
           Mi <span className="text-cor-action">Prode</span>
         </h1>
         <p className="mt-3 text-cor-muted">
